@@ -1,0 +1,10 @@
+{
+  "name": "macarte-ocr",
+  "version": "0.1.0",
+  "description": "Module OCR local et hors ligne de Macarte (ML Kit sur Android, Apple Vision sur iOS)",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Penouel Aoga",
+  "homepage": "https://github.com/P1N2/MaCarte",
+  "private": true
+}
