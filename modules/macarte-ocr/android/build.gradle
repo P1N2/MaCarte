@@ -1,0 +1,22 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.macarteocr'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.macarteocr"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+}
+
+dependencies {
+  // Modèle « bundled » : le modèle de reconnaissance est embarqué dans l'APK.
+  // Aucun téléchargement via Google Play Services, l'OCR fonctionne hors ligne
+  // dès la première ouverture de l'application.
+  implementation 'com.google.mlkit:text-recognition:16.0.1'
+}

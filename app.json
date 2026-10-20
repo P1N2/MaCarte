@@ -23,12 +23,6 @@
     },
     "plugins": [
       [
-        "expo-mlkit-ocr",
-        {
-          "iosEngine": "auto"
-        }
-      ],
-      [
         "expo-build-properties",
         {
           "ios": {

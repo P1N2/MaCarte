@@ -83,7 +83,7 @@ La première version cible quatre opérateurs au Niger :
 | Expo | Environnement de développement |
 | JavaScript | Langage principal |
 | Expo Camera | Accès à la caméra du téléphone |
-| Google ML Kit OCR | Reconnaissance de texte envisagée sur l'appareil |
+| Module OCR local (`modules/macarte-ocr`) | Reconnaissance hors ligne : ML Kit embarqué (Android), Apple Vision (iOS) |
 | Expo Dev Client | Test des modules natifs personnalisés |
 
 ---
@@ -142,6 +142,15 @@ Macarte/
 │   ├── image2.png
 │   ├── image3.png
 │   └── ...
+├── modules/
+│   └── macarte-ocr/          # module natif OCR hors ligne (Expo Module local)
+│       ├── android/          # Kotlin + ML Kit Text Recognition (modèle embarqué)
+│       ├── ios/              # Swift + Apple Vision
+│       └── index.js          # API JS : reconnaitreTexte(uri), estDisponible()
+├── src/
+│   └── ocr/
+│       ├── codeRecharge.js   # extraction du code, commande USSD
+│       └── codeRecharge.test.mjs
 ├── App.js
 ├── app.json
 ├── package.json
@@ -188,7 +197,27 @@ npm install
 npx expo start
 ```
 
-**Remarque :** les fonctionnalités utilisant des modules natifs, notamment l'OCR, nécessitent un development build compatible. Expo Go seul peut ne pas suffire.
+**Remarque :** l'OCR est un module natif local : il ne fonctionne pas dans Expo Go. Il faut un development build :
+
+```bash
+npx expo run:android                              # build local (Android Studio requis)
+npx eas-cli@latest build --profile development -p android   # ou build dans le cloud
+```
+
+### 5. Lancer les tests
+
+```bash
+npm test
+```
+
+### 🔍 OCR hors ligne
+
+L'OCR est intégré directement dans le dépôt, dans `modules/macarte-ocr` (autolinké par Expo) :
+
+- **Android** : Google ML Kit Text Recognition en version *bundled* (`com.google.mlkit:text-recognition`). Le modèle est embarqué dans l'APK : aucun téléchargement, aucune connexion, même au premier lancement.
+- **iOS** : framework Apple Vision, fourni par le système et exécuté sur l'appareil.
+
+Aucune image n'est envoyée à un serveur. Après la capture, `src/ocr/codeRecharge.js` garde le texte situé dans le cadre de scan, corrige les confusions courantes (`O`→`0`, `I`→`1`, `S`→`5`…), choisit la plus longue suite de chiffres et la propose à l'utilisateur, qui peut la corriger avant d'ouvrir le composeur.
 
 ---
 
@@ -200,10 +229,10 @@ npx expo start
 | Sélection des opérateurs | ✅ Réalisée |
 | Affichage des logos | ✅ Intégré |
 | Écran de scan | ✅ Interface intégrée |
-| Accès à la caméra | 🔄 À tester dans le build |
-| Intégration de l'OCR | 🚧 En cours |
-| Extraction et correction du code | 🚧 À développer |
-| Génération de la commande USSD | 🚧 À intégrer |
+| Accès à la caméra | ✅ Capture photo intégrée |
+| Intégration de l'OCR hors ligne | ✅ Module local (à valider sur appareil) |
+| Extraction et correction du code | ✅ Réalisée |
+| Génération de la commande USSD | ✅ Réalisée |
 | Tests avec des cartes physiques | ⏳ À venir |
 
 ---
